@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daeny 影音作品集</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* --- 基礎頁面樣式 --- */
+        body { font-family: 'Microsoft JhengHei', sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%); color: #fff; line-height: 1.6; }
+        
+        header, .section, footer { position: relative; z-index: 20; }
+        
+        header { text-align: center; padding: 60px 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); }
+        h1 { font-size: 3em; margin: 0 0 10px; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); }
+        .subtitle { font-size: 1.4em; margin: 0 0 20px; opacity: 0.9; }
+        .social-btns {
+    margin-top: 30px;
+}
+
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    margin: 0 15px;
+    font-size: 24px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+/* YouTube 紅色懸停效果 */
+.icon-btn.yt:hover {
+    background: #FF0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+    transform: translateY(-5px);
+}
+
+/* Instagram 漸層懸停效果 */
+.icon-btn.ig:hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    box-shadow: 0 0 20px rgba(220, 39, 67, 0.6);
+    transform: translateY(-5px);
+}
+        .btn { display: inline-block; background: linear-gradient(45deg, #ff6b35, #f7931e); color: white; padding: 12px 28px; border-radius: 30px; text-decoration: none; margin: 0 10px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,107,53,0.4); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,107,53,0.6); }
+
+        .section { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
+        h2 { text-align: center; font-size: 2.2em; margin-bottom: 40px; position: relative; }
+        h2::after { content: ''; display: block; width: 60px; height: 3px; background: #ff6b35; margin: 10px auto; border-radius: 2px; }
+        
+        .works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+        .work-item { background: rgba(255,255,255,0.08); border-radius: 20px; padding: 25px; transition: all 0.4s; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
+        .work-item:hover { transform: translateY(-8px); background: rgba(255,255,255,0.12); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .work-item a { text-decoration: none; color: inherit; display: block; }
+        .work-title { font-size: 1.3em; font-weight: bold; margin-bottom: 8px; }
+        .work-meta { font-size: 0.95em; color: #ccc; margin-bottom: 12px; }
+        .work-desc { font-size: 1em; opacity: 0.9; }
+        
+        footer { text-align: center; padding: 40px 20px; background: rgba(0,0,0,0.8); margin-top: 80px; }
+
+        /* --- 跑馬燈定位與動畫控制 --- */
+        .marquee-side {
+            position: fixed;
+            top: 0;
+            width: 150px;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1; 
+            opacity: 0.4;
+            transition: opacity 0.4s;
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+        }
+        
+        .marquee-side:hover { opacity: 1; z-index: 25; }
+        .marquee-side:hover .marquee-content { animation-play-state: paused; }
+
+        .side-left { left: 20px; }
+        .side-right { right: 20px; }
+
+        .marquee-content { display: flex; flex-direction: column; animation: scroll-vertical 30s linear infinite; }
+        .marquee-content.reverse { animation: scroll-vertical-reverse 35s linear infinite; }
+
+        .marquee-content a { display: block; width: 100%; margin-bottom: 15px; text-decoration: none; pointer-events: auto; }
+        .marquee-content img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        .marquee-content a:hover img { box-shadow: 0 10px 30px rgba(255, 107, 53, 0.6); border: 2px solid #ff6b35; }
+        .side-left a:hover img { transform: scale(1.15) translateX(15px); }
+        .side-right a:hover img { transform: scale(1.15) translateX(-15px); }
+
+        @keyframes scroll-vertical { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+        @keyframes scroll-vertical-reverse { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+
+        @media (max-width: 1500px) { .marquee-side { display: none; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Daeny 影音作品集</h1>
+        <p class="subtitle">記者｜影音創作者</p>
+        <div class="social-btns">
+            <a href="https://www.youtube.com/@daenyrober8274" target="_blank" class="icon-btn yt" title="YouTube">
+        <i class="fa-brands fa-youtube"></i>
+    </a>
+    <a href="https://www.instagram.com/daeny_videomaker/" target="_blank" class="icon-btn ig" title="Instagram">
+        <i class="fa-brands fa-instagram"></i>
+    </a>
+        </div>
+    </header>
+
+    <div class="marquee-side side-left">
+        <div class="marquee-content">
+            <a href="https://drive.google.com/file/d/1i-38lReIKIDKry_Dz1zhpJ2yYxZs9ICP/view?usp=drive_link" target="_blank"><img src="images/img01.jpg" alt="work1"></a>
+            <a href="https://drive.google.com/file/d/12fOoBNHkPmTtWwMYBi4T1JzZDtYtuZua/view?usp=drive_link" target="_blank"><img src="images/img02.jpg" alt="work2"></a>
+            <a href="https://drive.google.com/file/d/1qriGDu09IMNMauD8v91X8kcu-Ajs0FaD/view?usp=drive_link" target="_blank"><img src="images/img03.jpg" alt="work3"></a>
+            <a href="https://drive.google.com/file/d/1lpWLF8qlmw_5GhwtBuI501HuBgGx-ku9/view?usp=drive_link" target="_blank"><img src="images/img04.jpg" alt="work4"></a>
+            <a href="https://www.instagram.com/p/CTuEw54p8V4/?igsh=ZWFoeXp0ZWl2NGpx" target="_blank"><img src="images/img05.jpg" alt="work5"></a>
+            <a href="https://www.instagram.com/tv/CUPqNMWplZV/?igsh=MWtxZ2xvNHdlbGM1dw==" target="_blank"><img src="images/img06.jpg" alt="work6"></a>
+            <a href="https://www.instagram.com/p/CVIb-gRAmo7/?igsh=MWtxZ2xvNHdlbGM1dw==" target="_blank"><img src="images/img07.jpg" alt="work7"></a>
+            <a href="https://www.instagram.com/p/CdqPi4_uJ1G/" target="_blank"><img src="images/img08.jpg" alt="work8"></a>
+            <a href="https://www.instagram.com/tv/CR_TXOIHqQO/?igsh=MXMyZzdrY2txdGRvOA==" target="_blank"><img src="images/img09.jpg" alt="work9"></a>
+            <a href="https://drive.google.com/file/d/1i-38lReIKIDKry_Dz1zhpJ2yYxZs9ICP/view?usp=drive_link" target="_blank"><img src="images/img01.jpg" alt="work1"></a>
+            <a href="https://drive.google.com/file/d/12fOoBNHkPmTtWwMYBi4T1JzZDtYtuZua/view?usp=drive_link" target="_blank"><img src="images/img02.jpg" alt="work2"></a>
+            <a href="https://drive.google.com/file/d/1qriGDu09IMNMauD8v91X8kcu-Ajs0FaD/view?usp=drive_link" target="_blank"><img src="images/img03.jpg" alt="work3"></a>
+            <a href="https://drive.google.com/file/d/1lpWLF8qlmw_5GhwtBuI501HuBgGx-ku9/view?usp=drive_link" target="_blank"><img src="images/img04.jpg" alt="work4"></a>
+            <a href="https://www.instagram.com/p/CTuEw54p8V4/?igsh=ZWFoeXp0ZWl2NGpx" target="_blank"><img src="images/img05.jpg" alt="work5"></a>
+            <a href="https://www.instagram.com/tv/CUPqNMWplZV/?igsh=MWtxZ2xvNHdlbGM1dw==" target="_blank"><img src="images/img06.jpg" alt="work6"></a>
+            <a href="https://www.instagram.com/p/CVIb-gRAmo7/?igsh=MWtxZ2xvNHdlbGM1dw==" target="_blank"><img src="images/img07.jpg" alt="work7"></a>
+            <a href="https://www.instagram.com/p/CdqPi4_uJ1G/" target="_blank"><img src="images/img08.jpg" alt="work8"></a>
+            <a href="https://www.instagram.com/tv/CR_TXOIHqQO/?igsh=MXMyZzdrY2txdGRvOA==" target="_blank"><img src="images/img09.jpg" alt="work9"></a>
+        </div>
+    </div>
+
+    <div class="marquee-side side-right">
+        <div class="marquee-content reverse">
+            <a href="https://www.instagram.com/p/DSZ_DQ2D_EJ/?img_index=1" target="_blank"><img src="images/img10.jpg" alt="work10"></a>
+            <a href="https://www.instagram.com/p/DPJhwGbjzBy/?img_index=1" target="_blank"><img src="images/img11.jpg" alt="work11"></a>
+            <a href="https://drive.google.com/file/d/1T5fj_dujkiivAL_RWWMIj124Q64qOQnd/view?usp=drive_link" target="_blank"><img src="images/img12.jpg" alt="work12"></a>
+            <a href="https://www.instagram.com/p/DS5ABxQj0Hk/?img_index=1" target="_blank"><img src="images/img13.jpg" alt="work13"></a>
+            <a href="https://drive.google.com/file/d/1Mt0IR4NHb8TmH5vagKzdq_TfHm-uop_l/view?usp=drive_link" target="_blank"><img src="images/img14.jpg" alt="work14"></a>
+            <a href="https://drive.google.com/file/d/1Q4vj9lO0WDJmCHUAXUy5LjEnKgfBUDvx/view?usp=drive_link" target="_blank"><img src="images/img15.jpg" alt="work15"></a>
+            <a href="https://drive.google.com/file/d/1yfRbPWfAwdAnGMbjZ7xr8VnI1V7-eFDr/view?usp=drive_link" target="_blank"><img src="images/img16.jpg" alt="work16"></a>
+            <a href="https://drive.google.com/file/d/1DHumga_QB-aiW4wGLDsHK-R3YxXV6Lwi/view?usp=drive_link" target="_blank"><img src="images/img17.jpg" alt="work17"></a>
+            <a href="https://drive.google.com/file/d/1oj-ABlf4974Sbk2lO421ntCGjlyWg1Vi/view?usp=drive_link" target="_blank"><img src="images/img18.jpg" alt="work18"></a>
+            <a href="https://www.instagram.com/p/DSZ_DQ2D_EJ/?img_index=1" target="_blank"><img src="images/img10.jpg" alt="work10"></a>
+            <a href="https://www.instagram.com/p/DPJhwGbjzBy/?img_index=1" target="_blank"><img src="images/img11.jpg" alt="work11"></a>
+            <a href="https://drive.google.com/file/d/1T5fj_dujkiivAL_RWWMIj124Q64qOQnd/view?usp=drive_link" target="_blank"><img src="images/img12.jpg" alt="work12"></a>
+            <a href="https://www.instagram.com/p/DS5ABxQj0Hk/?img_index=1" target="_blank"><img src="images/img13.jpg" alt="work13"></a>
+            <a href="https://drive.google.com/file/d/1Mt0IR4NHb8TmH5vagKzdq_TfHm-uop_l/view?usp=drive_link" target="_blank"><img src="images/img14.jpg" alt="work14"></a>
+            <a href="https://drive.google.com/file/d/1Q4vj9lO0WDJmCHUAXUy5LjEnKgfBUDvx/view?usp=drive_link" target="_blank"><img src="images/img15.jpg" alt="work15"></a>
+            <a href="https://drive.google.com/file/d/1yfRbPWfAwdAnGMbjZ7xr8VnI1V7-eFDr/view?usp=drive_link" target="_blank"><img src="images/img16.jpg" alt="work16"></a>
+            <a href="https://drive.google.com/file/d/1DHumga_QB-aiW4wGLDsHK-R3YxXV6Lwi/view?usp=drive_link" target="_blank"><img src="images/img17.jpg" alt="work17"></a>
+            <a href="https://drive.google.com/file/d/1oj-ABlf4974Sbk2lO421ntCGjlyWg1Vi/view?usp=drive_link" target="_blank"><img src="images/img18.jpg" alt="work18"></a>
+        </div>
+    </div>
+
+    <section class="section">
+        <h2>翡翠少年紀錄片</h2>
+        <div class="works-grid">
+            <div class="work-item">
+                <a href="https://www.instagram.com/tv/CR_TXOIHqQO/?igsh=MXMyZzdrY2txdGRvOA==" target="_blank">
+                    <div class="work-title">前導片</div>
+                    <div class="work-meta">側拍組、剪接｜Instagram Reel</div>
+                    <div class="work-desc">青浪潮團隊《翡翠少年》前導，捕捉核心故事精華。</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://www.instagram.com/p/CTuEw54p8V4/?igsh=ZWFoeXp0ZWl2NGpx" target="_blank">
+                    <div class="work-title">預告花絮片(1)</div>
+                    <div class="work-meta">側拍組、剪接｜Instagram Reel</div>
+                    <div class="work-desc">幕後製作花絮，展現團隊熱血與紀錄片製作過程。</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://www.instagram.com/tv/CUPqNMWplZV/?igsh=MWtxZ2xvNHdlbGM1dw==" target="_blank">
+                    <div class="work-title">預告花絮片(2)</div>
+                    <div class="work-meta">側拍組、剪接｜Instagram Reel</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://www.instagram.com/p/CVIb-gRAmo7/?igsh=MWtxZ2xvNHdlbGM1dw==" target="_blank">
+                    <div class="work-title">預告花絮片(3)</div>
+                    <div class="work-meta">側拍組、剪接｜Instagram Reel</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://www.instagram.com/p/CdqPi4_uJ1G/" target="_blank">
+                    <div class="work-title">上映影展花絮</div>
+                    <div class="work-meta">側拍組、剪接｜Instagram Post</div>
+                    <div class="work-desc">影展現場記錄，紀錄片正式亮相時刻。</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>KOL合作 & 產品宣傳</h2>
+        <div class="works-grid">
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/12fOoBNHkPmTtWwMYBi4T1JzZDtYtuZua/view?usp=drive_link" target="_blank">
+                    <div class="work-title">2023中原醫工營活動紀錄</div>
+                    <div class="work-meta">活動紀錄片｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1T5fj_dujkiivAL_RWWMIj124Q64qOQnd/view?usp=drive_link" target="_blank">
+                    <div class="work-title">Motorola MotoPad 產品宣傳</div>
+                    <div class="work-meta">品牌短影音｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1Mt0IR4NHb8TmH5vagKzdq_TfHm-uop_l/view?usp=drive_link" target="_blank">
+                    <div class="work-title">OASIS馬琳糖 產品宣傳</div>
+                    <div class="work-meta">品牌短影音｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1Q4vj9lO0WDJmCHUAXUy5LjEnKgfBUDvx/view?usp=drive_link" target="_blank">
+                    <div class="work-title">131安瓶 宣傳短片</div>
+                    <div class="work-meta">美妝短影音｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1qriGDu09IMNMauD8v91X8kcu-Ajs0FaD/view?usp=drive_link" target="_blank">
+                    <div class="work-title">DRC醫美 合作短片</div>
+                    <div class="work-meta">醫美品牌｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1yfRbPWfAwdAnGMbjZ7xr8VnI1V7-eFDr/view?usp=drive_link" target="_blank">
+                    <div class="work-title">維他命C精華液 宣傳</div>
+                    <div class="work-meta">保養品短片｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1lpWLF8qlmw_5GhwtBuI501HuBgGx-ku9/view?usp=drive_link" target="_blank">
+                    <div class="work-title">Dr.Ran 洗髮精 宣傳</div>
+                    <div class="work-meta">美髮產品｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1i-38lReIKIDKry_Dz1zhpJ2yYxZs9ICP/view?usp=drive_link" target="_blank">
+                    <div class="work-title">Bananal 沐浴乳 宣傳</div>
+                    <div class="work-meta">個護短影音｜Google Drive</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Vlog & 隨手札記</h2>
+        <div class="works-grid">
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1oj-ABlf4974Sbk2lO421ntCGjlyWg1Vi/view?usp=drive_link" target="_blank">
+                    <div class="work-title">桃園Xpark Vlog</div>
+                    <div class="work-meta">生活記錄｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1EZzKgudwTUksxAXsBA0IQJq259VT6jZo/view?usp=drive_link" target="_blank">
+                    <div class="work-title">淡水街邊 Vlog</div>
+                    <div class="work-meta">街頭隨拍｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1DHumga_QB-aiW4wGLDsHK-R3YxXV6Lwi/view?usp=drive_link" target="_blank">
+                    <div class="work-title">台北街頭 Vlog</div>
+                    <div class="work-meta">都市生活｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1UhDA7TJBySVpgkQYSpX7syMbNbRgiiPU/view?usp=drive_link" target="_blank">
+                    <div class="work-title">台中 Vlog</div>
+                    <div class="work-meta">旅行札記｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1EYcrn1IUjOeMRlf5JE4JsayXA_Y9rGkU/view?usp=drive_link" target="_blank">
+                    <div class="work-title">宜蘭 Vlog</div>
+                    <div class="work-meta">在地探索｜Google Drive</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>其他作品 & 平面攝影</h2>
+        <div class="works-grid">
+            <div class="work-item">
+                <a href="https://drive.google.com/file/d/1FnjVRYf36c4fl3yR-PVVlwMoP_SdKqSG/view?usp=drive_link" target="_blank">
+                    <div class="work-title">拍攝花絮剪輯</div>
+                    <div class="work-meta">幕後製作｜Google Drive</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://www.instagram.com/p/DS5ABxQj0Hk/?img_index=1" target="_blank">
+                    <div class="work-title">NonSpace 合作攝影(1)</div>
+                    <div class="work-meta">平面攝影｜Instagram</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://www.instagram.com/p/DPO1RVEjxWr/?img_index=1" target="_blank">
+                    <div class="work-title">NonSpace 合作攝影(2)</div>
+                    <div class="work-meta">平面攝影｜Instagram</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://www.instagram.com/p/DPJhwGbjzBy/?img_index=1" target="_blank">
+                    <div class="work-title">Moon飾品 攝影</div>
+                    <div class="work-meta">飾品拍攝｜Instagram</div>
+                </a>
+            </div>
+            <div class="work-item">
+                <a href="https://www.instagram.com/p/DSZ_DQ2D_EJ/?img_index=1" target="_blank">
+                    <div class="work-title">馬卡龍包包 攝影</div>
+                    <div class="work-meta">時尚配件｜Instagram</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Daeny 影音作品集 | 新北台北 | 聯絡：d650201@gmail.com | LineID：daenyisme</p>
+    </footer>
+
+</body>
+</html>
